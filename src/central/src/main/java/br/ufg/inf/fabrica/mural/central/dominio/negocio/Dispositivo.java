@@ -13,9 +13,9 @@ import br.ufg.inf.fabrica.mural.central.dominio.exception.ValidaDispositivoExcep
 import br.ufg.inf.fabrica.mural.central.dominio.exception.VerificaUsuarioNotificacaoDirigidaException;
 import br.ufg.inf.fabrica.mural.central.dominio.stub.StubAutenticadorCAS;
 import br.ufg.inf.fabrica.mural.central.persistencia.StubDispositivoDao;
+import br.ufg.inf.fabrica.mural.central.persistencia.StubNotificacaoDao;
 import br.ufg.inf.fabrica.mural.central.persistencia.StubUsuarioDao;
-import java.util.logging.Logger;
-import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -23,17 +23,15 @@ import org.apache.log4j.BasicConfigurator;
  */
 public class Dispositivo {
     
-    static final Logger logger = Logger.getLogger("Dispositivo");
+    private static final Logger LOGGER = Logger.getLogger("Dispositivo");
     
-    private String identificadorGCM;
-    private Usuario usuario;
+    private final String identificadorGCM;
+    private final Usuario usuario;
     private String listaNotificacao;
     
     public Dispositivo(String identificadorGCM, Usuario usuario){
         this.identificadorGCM = identificadorGCM;
         this.usuario = usuario;
-        
-        BasicConfigurator.configure();
     }
 
     public String getIdentificadorGCM() {
@@ -53,32 +51,42 @@ public class Dispositivo {
             validarDispositivo(identificadorGCM);
             verificarUsuarioNotificacaoDirigida();
             validarCredencial(usuario);
-            return CodigoResposta.Codigo1000;
+            return CodigoResposta.CODIGO1000;
         } catch(ValidaDispositivoException e1){
-            logger.info(CodigoResposta.Codigo1007.getDescricao());
-            return CodigoResposta.Codigo1007;
+            LOGGER.error(CodigoResposta.CODIGO1007.getDescricao(), e1);
+            return CodigoResposta.CODIGO1007;
         } catch(VerificaUsuarioNotificacaoDirigidaException e2){
-            logger.info(CodigoResposta.Codigo1006.getDescricao());
-            return CodigoResposta.Codigo1006;
+            LOGGER.error(CodigoResposta.CODIGO1006.getDescricao(), e2);
+            return CodigoResposta.CODIGO1006;
         } catch(ValidaCredencialException e3){
-            logger.info(CodigoResposta.Codigo1002.getDescricao());
-            return CodigoResposta.Codigo1002;
+            LOGGER.error(CodigoResposta.CODIGO1002.getDescricao(), e3);
+            return CodigoResposta.CODIGO1002;
         }
 
     }
     
-    private boolean validarDispositivo(String identificador) throws ValidaDispositivoException{
-        return new StubDispositivoDao().validarDispositivo(identificador);
+    public boolean validarDispositivo(String identificador) throws ValidaDispositivoException{
+        Dispositivo dispositivo = new StubDispositivoDao().localizaDispositivoPorIdentificador(identificador);
+        if(dispositivo == null) {
+            return false;
+        } 
+        return true;
     }
     
-    private boolean verificarUsuarioNotificacaoDirigida() throws VerificaUsuarioNotificacaoDirigidaException{
-        return new StubUsuarioDao().verificarUsuarioNotificacaoDirigida(usuario);
+    public boolean verificarUsuarioNotificacaoDirigida() throws VerificaUsuarioNotificacaoDirigidaException{
+        Usuario usuarioByLoginSenha = new StubUsuarioDao().buscaUsuarioByLoginSenha(usuario.getLogin(), usuario.getSenha());
+        boolean verificacao = new StubNotificacaoDao().verificaSeUsuarioRecebeNotifDirigida(usuarioByLoginSenha);
+        return verificacao;
     }
     
     private boolean validarCredencial(Usuario usuario) throws ValidaCredencialException{
         return new StubAutenticadorCAS().validarCredencial(usuario);
     }
     
+    @Override
+    public String toString() {
+        return "Dispositivo{" + "identificadorGCM=" + identificadorGCM + "}";
+    }
     /*Existem outros metodos definidos no modelo de dominio 
       que nao participam desta funcionalidade
       portanto nao foram incluidos nesta classe.*/

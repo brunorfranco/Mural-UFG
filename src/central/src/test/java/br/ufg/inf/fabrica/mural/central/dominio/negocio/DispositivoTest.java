@@ -7,12 +7,11 @@
 package br.ufg.inf.fabrica.mural.central.dominio.negocio;
 
 import br.ufg.inf.fabrica.mural.central.dominio.entidade.Usuario;
+import br.ufg.inf.fabrica.mural.central.dominio.enumerado.CodigoResposta;
 import br.ufg.inf.fabrica.mural.central.dominio.exception.ValidaCredencialException;
 import br.ufg.inf.fabrica.mural.central.dominio.exception.ValidaDispositivoException;
 import br.ufg.inf.fabrica.mural.central.dominio.exception.VerificaUsuarioNotificacaoDirigidaException;
 import br.ufg.inf.fabrica.mural.central.dominio.stub.StubAutenticadorCAS;
-import br.ufg.inf.fabrica.mural.central.persistencia.StubDispositivoDao;
-import br.ufg.inf.fabrica.mural.central.persistencia.StubUsuarioDao;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,10 +20,11 @@ import org.junit.Test;
  *
  * @author Bruno
  */
-public class DispositivoTeste {
+public class DispositivoTest {
     
     private static String identificadorGCM;
     private static Usuario usuario;
+    private static Dispositivo dispositivo;
     
     @BeforeClass
     public static void carregaIdentificadoEUsuario(){
@@ -32,17 +32,19 @@ public class DispositivoTeste {
         usuario = new Usuario();
         usuario.setLogin("LoginBruno");
         usuario.setSenha("SenhaBruno");
+        
+        dispositivo = new Dispositivo(identificadorGCM, usuario);
     }
     
     @Test
     public void validaDispositivoTeste() throws ValidaDispositivoException{
-        Boolean valida = new StubDispositivoDao().validarDispositivo(identificadorGCM);
-        Assert.assertEquals(valida, true);
+        boolean validarDispositivo = new Dispositivo(identificadorGCM, usuario).validarDispositivo(identificadorGCM);
+        Assert.assertEquals(validarDispositivo, true);
     }
     
     @Test
     public void verificarUsuarioNotificacaoDirigidaTeste() throws VerificaUsuarioNotificacaoDirigidaException{
-        Boolean valida = new StubUsuarioDao().verificarUsuarioNotificacaoDirigida(usuario);
+        Boolean valida = new Dispositivo(identificadorGCM, usuario).verificarUsuarioNotificacaoDirigida();
         Assert.assertEquals(valida, true);
     }
     
@@ -50,6 +52,27 @@ public class DispositivoTeste {
     public void validarCredencialTeste() throws ValidaCredencialException{
         Boolean valida = new StubAutenticadorCAS().validarCredencial(usuario);
         Assert.assertEquals(valida, true);
+    }
+    
+    @Test
+    public void getIdentificadorGCMTeste(){
+        Assert.assertEquals(dispositivo.getIdentificadorGCM(), identificadorGCM);
+    }
+    
+    @Test
+    public void getUsuarioTeste(){
+        Assert.assertEquals(dispositivo.getUsuario(), usuario);
+    }
+    
+    @Test
+    public void getListaNotificacaoTeste(){
+        Assert.assertEquals(dispositivo.getListaNotificacao(), null);
+    }
+    
+    @Test
+    public void dessassociarDispositivoAoUsuarioTeste(){
+        CodigoResposta dessassociarDispositivoAoUsuario = dispositivo.dessassociarDispositivoAoUsuario();
+        Assert.assertEquals(dessassociarDispositivoAoUsuario, CodigoResposta.CODIGO1000);
     }
     
 }

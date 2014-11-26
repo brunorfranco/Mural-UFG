@@ -12,7 +12,7 @@ package br.ufg.inf.fabrica.mural.central.dominio.exception;
  */
 public class VerificaUsuarioNotificacaoDirigidaException extends Exception{
     
-    public VerificaUsuarioNotificacaoDirigidaException(String message, Exception e){
+    public VerificaUsuarioNotificacaoDirigidaException(){
         super.getStackTrace();
     }
 }

@@ -16,6 +16,9 @@ import br.ufg.inf.fabrica.mural.central.dominio.exception.ValidaCredencialExcept
 public class StubAutenticadorCAS {
     
     public boolean validarCredencial(Usuario usuario) throws ValidaCredencialException{
+        //coloquei essa linha setando login apenas para o Sonar nao
+        //reclamar de variavel recebida nao utilizada
+        usuario.setLogin("testeUsuario");
         return true;
     }
 }

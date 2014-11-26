@@ -6,7 +6,9 @@
 
 package br.ufg.inf.fabrica.mural.central.persistencia;
 
+import br.ufg.inf.fabrica.mural.central.dominio.entidade.Usuario;
 import br.ufg.inf.fabrica.mural.central.dominio.exception.ValidaDispositivoException;
+import br.ufg.inf.fabrica.mural.central.dominio.negocio.Dispositivo;
 
 /**
  *
@@ -14,7 +16,7 @@ import br.ufg.inf.fabrica.mural.central.dominio.exception.ValidaDispositivoExcep
  */
 public class StubDispositivoDao {
     
-    public boolean validarDispositivo(String identificador) throws ValidaDispositivoException{
-        return true;
+    public Dispositivo localizaDispositivoPorIdentificador(String identificador) throws ValidaDispositivoException{
+        return new Dispositivo(identificador, new Usuario());
     }
 }
