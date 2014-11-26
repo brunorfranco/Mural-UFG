@@ -6,8 +6,6 @@
 
 package br.ufg.inf.fabrica.mural.central.dominio.entidade;
 
-import java.util.Collection;
-
 /**
  *
  * @author Bruno
@@ -60,9 +58,13 @@ public class Usuario {
         this.administrador = administrador;
     }
     
-    public Collection obterUsuarioGrupo(GrupoDestinatario grupoDestinatario){
-        //nao faz parte desse pacote implementar esse metodo
-        return null;
+    @Override
+    public String toString() {
+        return "Usuario{" + "login=" + login + " senha=" + senha + "}";
     }
+    
+    /*Existem outros metodos definidos no modelo de dominio 
+      que nao participam desta funcionalidade
+      portanto nao foram incluidos nesta classe.*/
     
 }

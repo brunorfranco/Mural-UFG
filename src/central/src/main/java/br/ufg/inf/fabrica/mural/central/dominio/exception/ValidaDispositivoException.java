@@ -12,7 +12,7 @@ package br.ufg.inf.fabrica.mural.central.dominio.exception;
  */
 public class ValidaDispositivoException extends Exception{
     
-    public ValidaDispositivoException(String message, Exception e){
+    public ValidaDispositivoException(){
         super.getStackTrace();
     }
 }

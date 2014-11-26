@@ -12,7 +12,7 @@ package br.ufg.inf.fabrica.mural.central.dominio.exception;
  */
 public class ValidaCredencialException extends Exception{
     
-    public ValidaCredencialException(String message, Exception e){
+    public ValidaCredencialException(){
         super.getStackTrace();
     }
 }
